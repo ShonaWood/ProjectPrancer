@@ -1,0 +1,149 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2761
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 Menlo-Bold;\f1\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;}
+{\*\expandedcolortbl;;\csgray\c0;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww14080\viewh18000\viewkind0
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\b\fs22 \cf2 \CocoaLigature0 Terminal house keeping:
+\f1\b0 \
+Brew upgrade\
+Brew update \
+Set working directory:\
+cd Desktop/MSc_Project/Reindeer_Retina_RNA/gene_expression_DECEMBER/cow_hypos/\
+\
+
+\f0\b Remove first row (\'93Geneid\'94) of hypo.csv, and save as a .txt:
+\f1\b0 \
+tail -n +2 hypo.csv > gene_ids.txt\
+\
+
+\f0\b Remove spaces from gene_ids.txt:
+\f1\b0 \
+tr -d '\\r' < gene_ids.txt > gene_ids_clean.txt\
+mv gene_ids_clean.txt gene_ids.txt\
+\
+
+\f0\b Check they\'92re gone (no M^):
+\f1\b0 \
+cat -v gene_ids.txt\
+\
+
+\f0\b Exctract genomic location info for the genes listed in gene_ids.txt, and save info in new .bed file:
+\f1\b0 \
+gawk -F'\\t' '\
+BEGIN \{\
+  while ((getline < "gene_ids.txt") > 0) ids[$1]=1\
+\}\
+$3 == "gene" \{\
+  if (match($9, /ID=([^;]+)/, a)) \{\
+    if (a[1] in ids) \{\
+      print $1 "\\t" ($4-1) "\\t" $5 "\\t" a[1]\
+    \}\
+  \}\
+\}\
+' reindeer_genome.gff > hypo_genes.bed\
+\
+\
+
+\f0\b Extract sequences from reindeer genome, save in a fasta file:
+\f1\b0  \
+bedtools getfasta \\\
+  -fi reindeer_genome.fa \\\
+  -bed hypo_genes.bed \\\
+  -name \\\
+  -fo hypo_genes.fa\
+\
+
+\f0\b Make cow database to blast against:
+\f1\b0  \
+makeblastdb \\\
+  -in cow.fna \\\
+  -dbtype nucl \\\
+  -out cow_genome_db\
+\
+\
+
+\f0\b Blast against cow (high evalue required due to the conserved nature of opsins):
+\f1\b0 \
+blastn \\\
+  -query hypo_genes.fa \\\
+  -db cow_genome_db \\\
+  -task blastn \\\
+  -evalue 1e-10 \\\
+  -max_target_seqs 5 \\\
+  -num_threads 4 \\\
+  -out hypo_vs_cow.tsv \\\
+  -outfmt 6\
+\
+\
+
+\f0\b Keeping only the high-identity hits:
+\f1\b0  \
+awk '$3 >= 80' hypo_vs_cow.tsv > hypo_vs_cow_highID.tsv\
+\
+\
+
+\f0\b Making a file which contains the reindeer gene and the corresponding highest cow hit:
+\f1\b0 \
+sort -k1,1 -k12,12nr hypo_vs_cow.tsv | \\\
+awk '!seen[$1]++ \{print $1 "\\t" $2\}' > rein_to_cow_best.tsv\
+\
+\
+
+\f0\b Extract only cow genes and their products from the cow.gff:
+\f1\b0 \
+awk -F'\\t' '\
+$3 == "CDS" \{\
+  split($9, attrs, ";")\
+  gene = product = ""\
+  for (i in attrs) \{\
+    if (attrs[i] ~ /^gene=/) gene = substr(attrs[i], 6)\
+    if (attrs[i] ~ /^product=/) product = substr(attrs[i], 9)\
+  \}\
+  if (gene != "" && product != "")\
+    print gene "\\t" product\
+\}\
+' cow.gff | sort -u > cow_gene_product.tsv\
+\
+
+\f0\b Match the hit cow sequences from blast to genes from the cow.gff:
+\f1\b0 \
+awk -F'\\t' '\
+$3 == "CDS" \{\
+  split($9, attrs, ";")\
+  gene = ""\
+  for (i in attrs) \{\
+    if (attrs[i] ~ /^gene=/) gene = substr(attrs[i], 6)\
+  \}\
+  if (gene != "")\
+    print $1 "\\t" gene\
+\}\
+' cow.gff | sort -u > cow_contig_gene.tsv\
+\
+
+\f0\b Make final table (reindeergene-cowgene):
+\f1\b0 \
+awk '\
+NR==FNR \{cg[$1]=$2; next\}\
+NR!=FNR \{\
+  cow_gene = cg[$2]\
+  if (cow_gene != "")\
+    print $1 "\\t" cow_gene\
+\}\
+' cow_contig_gene.tsv rein_to_cow_best.tsv > rein_to_cow_gene.tsv\
+\
+
+\f0\b Make final table (reindeergene-cowgene-cowproduct):
+\f1\b0 \
+awk '\
+NR==FNR \{\
+  prod[$1] = "\\"" substr($0, index($0,$2)) "\\""\
+  next\
+\}\
+NR!=FNR \{\
+  print $1 "\\t" $2 "\\t" prod[$2]\
+\}\
+' cow_gene_product.tsv rein_to_cow_gene.tsv > reindeer_cow_product.tsv\
+\
+}
