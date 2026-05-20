@@ -1,0 +1,38 @@
+# DNA_sequence 
+atgcctgtgaaagttcatgggctgacggtactagtagggattgtttccatcatcaccctaaccaggctggcatatgaatgttatatttgcatgatccatgtcagagtgatccattttccccaggcctggaggagcattccttgcatctggctgtcctcaatagtgtggtcaggagcatctctcctgggctggaacaaccacatcctggacatgcatggaccaggctgcactggagactggccatccaaggacaccagccactcgtcctttgcttttcttgtttcttggctgcctgatggtgtcattgctcattgtcaaggccgttttctcttttccattcaaactgtgagtcgaagactatga
+# 
+                        5'3' Frame 1
+                    
+
+                        MPVKVHGLTVLVGIVSIITLTRLAYECYICMIHVRVIHFPQAWRSIPCIWLSSIVWSGASLLGWNNHILDMHGPGCTGDWPSKDTSHSSFAFLVSWLPDGVIAHCQGRFLFSIQTVSRRL-
+                    
+# 
+                        5'3' Frame 2
+                    
+
+                        CL-KFMG-RY--GLFPSSP-PGWHMNVIFA-SMSE-SIFPRPGGAFLASGCPQ-CGQEHLSWAGTTTSWTCMDQAALETGHPRTPATRPLLFLFLGCLMVSLLIVKAVFSFPFKL-VEDY
+                    
+# 
+                        5'3' Frame 3
+                    
+
+                        ACESSWADGTSRDCFHHHPNQAGI-MLYLHDPCQSDPFSPGLEEHSLHLAVLNSVVRSISPGLEQPHPGHAWTRLHWRLAIQGHQPLVLCFSCFLAA-WCHCSLSRPFSLFHSNCESKTM
+                    
+# 
+                        3'5' Frame 1
+                    
+
+                        S-SSTHSLNGKEKTALTMSNDTIRQPRNKKSKGRVAGVLGWPVSSAAWSMHVQDVVVPAQERCS-PHY-GQPDARNAPPGLGKMDHSDMDHANITFICQPG-GDDGNNPY-YRQPMNFHRH
+                    
+# 
+                        3'5' Frame 2
+                    
+
+                        HSLRLTV-MEKRKRP-Q-AMTPSGSQETRKAKDEWLVSLDGQSPVQPGPCMSRMWLFQPRRDAPDHTIEDSQMQGMLLQAWGKWITLTWIMQI-HSYASLVRVMMETIPTSTVSP-TFTG
+                    
+# 
+                        3'5' Frame 3
+                    
+
+                        IVFDSQFEWKRENGLDNEQ-HHQAAKKQEKQRTSGWCPWMASLQCSLVHACPGCGCSSPGEMLLTTLLRTARCKECSSRPGENGSL-HGSCKYNIHMPAWLG--WKQSLLVPSAHELSQA
+                    
