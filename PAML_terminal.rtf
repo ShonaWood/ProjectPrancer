@@ -1,0 +1,87 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2761
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica-Bold;\f1\fswiss\fcharset0 Helvetica;\f2\fnil\fcharset0 .AppleSystemUIFontMonospaced-Regular;
+}
+{\colortbl;\red255\green255\blue255;\red24\green26\blue30;\red110\green120\blue134;}
+{\*\expandedcolortbl;;\cssrgb\c12157\c13725\c15686;\cssrgb\c50588\c54510\c59608\c12157;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\b\fs24 \cf0 Use bioconda package to install PAML\
+
+\f1\b0 conda install bioconda::paml\
+\
+
+\f0\b Check where it\'92s downloaded\
+
+\f1\b0 Which codeml\
+/Users/emerflanagan/miniforge3/bin/codeml\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 /Users/emerflanagan/codeml_OPN1SW/paml\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\
+
+\f0\b Cloning the directory from git hub instead (following the paml manual):\
+\pard\pardeftab720\partightenfactor0
+
+\f2\b0\fs27\fsmilli13600 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 git clone https://github.com/abacus-gene/paml.git\
+\
+
+\f1\fs24 \cf0 \cb1 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\b \cf0 Compile paml programs and executables:\
+
+\f1\b0 cd src\
+make\
+ls -1F\
+rm *.o\
+mv baseml basemlg codeml pamp evolver yn00 chi2 ../bin\
+cd ..\
+bin/codeml\
+\
+
+\f0\b Make a new working directory for each opsin:\
+
+\f1\b0 Cd emerflanagan/Desktop\
+mkdir ~/codeml_OPN1SW\
+cd ~/codeml_OPN1SW\
+\
+
+\f0\b Control (.ctl files) can be found in src, and copied to the working bin directory\
+\
+
+\f1\b0 \
+
+\f0\b Convert FASTA file to PHYLIP file format\
+
+\f1\b0 seqmagick convert alignment.fasta alignment.phy\
+seqmagick convert alignment.phy output.phy --output-format phylip-sequential\
+\
+
+\f0\b Might have to add spaces\
+
+\f1\b0 sed -E 's/^([A-Za-z0-9_]+) /\\1  /' output.phy > output_fixed.phy\
+\
+
+\f0\b Make new control file and save, but be sure to remove any hidden .txt extensions\
+
+\f1\b0 mv M812378_codeml.ctl.txt M812378_codeml.ctl\
+\
+
+\f0\b Will likley run into tree format issues (always bracket problems), so check the number of opening brackets matches the number of closing brackets\
+
+\f1\b0 grep -o "(" species_tree.tree | wc -l\
+grep -o ")" species_tree.tree | wc -l\
+\
+
+\f0\b Also opening the tree file in TreeViewer makes it easier to visually catch polygamy (caused by wrong brackets)
+\f1\b0 \
+\
+\
+
+\f0\b Run codeml\
+
+\f1\b0 codeml codeml.ctl\
+\
+}
